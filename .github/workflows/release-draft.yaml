@@ -1,0 +1,40 @@
+name: Release Draft
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  release:
+    name: Release
+    if: >-
+      github.event.pull_request.head.ref == 'release-please' &&
+      github.event.pull_request.merged
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - id: version
+        name: Get Version
+        run: |-
+          tag="${TITLE#'chore(release): '}"
+          version="${tag#'v'}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+      - name: Tag
+        run: |-
+          git tag '${{ steps.version.outputs.tag }}'
+          git push origin 'refs/tags/${{ steps.version.outputs.tag }}'
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ github.event.pull_request.body }}
+          tag_name: ${{ steps.version.outputs.tag }}
+          draft: true
