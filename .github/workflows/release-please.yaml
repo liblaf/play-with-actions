@@ -38,7 +38,7 @@ jobs:
           GIT_CLIFF_OUTPUT: CHANGELOG.md
           GIT_CLIFF_TAG: ${{ steps.version.outputs.tag }}
       - name: Generate PR Body
-        run: git-cliff --unreleased --strip all
+        run: git-cliff --unreleased
         env:
           GIT_CLIFF__CHANGELOG__HEADER: |-
             ## 🤖 I have created a release _beep boop_
