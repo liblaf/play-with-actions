@@ -8,8 +8,8 @@ on:
       - closed
 
 jobs:
-  release:
-    name: Release
+  release-draft:
+    name: Release Draft
     if: >-
       github.event.pull_request.head.ref == 'release-please' &&
       github.event.pull_request.merged
