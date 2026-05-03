@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    environment:
+      name: approve
+      deployment: false
+    steps:
+      - id: auth
+        name: Auth
+        uses: liblaf/actions/auth@v1
+        with:
+          app-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Get the authenticated app
+        run: gh api '/app'
+        env:
+          GH_TOKEN: ${{ steps.auth.outputs.token }}
+        continue-on-error: true
+      - name: Get the authenticated user
+        run: gh api '/user'
+        env:
+          GH_TOKEN: ${{ steps.auth.outputs.token }}
+          continue-on-error: true
+      - name: Get the authenticated app
+        run: gh api '/app'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        continue-on-error: true
+      - name: Get the authenticated user
+        run: gh api '/user'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        continue-on-error: true
