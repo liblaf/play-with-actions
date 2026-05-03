@@ -12,9 +12,9 @@ jobs:
     steps:
       - id: auth
         name: Auth
-        uses: liblaf/actions/auth@v1
+        uses: liblaf/actions/auth@v2
         with:
-          app-id: ${{ vars.APP_CLIENT_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Get the authenticated app
         run: gh api '/app'
